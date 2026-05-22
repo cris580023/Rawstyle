@@ -62,3 +62,11 @@ const pedidos = {
     todos:      ()   => apiFetch('/pedidos/admin/todos'),
     cambiarEstado: (id, b) => apiFetch(`/pedidos/admin/${id}/estado`, { method: 'PUT', body: JSON.stringify(b) }),
 };
+
+const reportes = {
+    resumen:     () => apiFetch('/reportes/resumen'),
+    productos:   () => apiFetch('/reportes/productos'),
+    categorias:  () => apiFetch('/reportes/categorias'),
+    periodo:     () => apiFetch('/reportes/periodo'),
+    dia:        () =>  apiFetch('/reportes/dia'),
+};

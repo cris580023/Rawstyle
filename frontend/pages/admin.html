@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Panel Admin — Rawstyle</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     .talla-check input { display: none; }
     .talla-check span {
@@ -50,10 +51,15 @@
             class="py-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-black transition-colors">
       Pedidos
     </button>
+    <button onclick="mostrarTab('reportes')" id="tab-reportes"
+            class="py-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-black transition-colors">
+      Reportes
+    </button>
   </div>
 </div>
 
 <main class="max-w-7xl mx-auto px-4 py-8">
+
   <div id="section-productos">
     <div class="flex items-center justify-between mb-6">
       <h2 class="text-xl font-semibold">Gestión de productos</h2>
@@ -86,13 +92,123 @@
     <div id="loading-ped" class="text-center py-10 text-gray-400">Cargando...</div>
     <div id="lista-pedidos-admin" class="hidden space-y-4"></div>
   </div>
+
+  <div id="section-reportes" class="hidden">
+    <h2 class="text-xl font-semibold mb-6">Reportes de ventas</h2>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+        <p class="text-sm text-gray-500 mb-1">Total pedidos</p>
+        <p class="text-2xl font-bold" id="r-pedidos">—</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+        <p class="text-sm text-gray-500 mb-1">Ingresos totales</p>
+        <p class="text-2xl font-bold text-green-700" id="r-ingresos">—</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+        <p class="text-sm text-gray-500 mb-1">Clientes activos</p>
+        <p class="text-2xl font-bold" id="r-clientes">—</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+        <p class="text-sm text-gray-500 mb-1">Unidades vendidas</p>
+        <p class="text-2xl font-bold" id="r-unidades">—</p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
+      <h3 class="font-semibold text-gray-800 mb-4">Ingresos por día</h3>
+      <div id="sin-datos-dia" class="hidden text-center py-8 text-gray-400 text-sm">
+        Sin datos de ventas diarias aún.
+      </div>
+      <canvas id="graficaDia" height="80"></canvas>
+      <div class="mt-6 overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 border-b border-gray-100">
+          <tr>
+            <th class="text-left px-4 py-2 font-medium text-gray-500">Día</th>
+            <th class="text-center px-4 py-2 font-medium text-gray-500">Pedidos</th>
+            <th class="text-right px-4 py-2 font-medium text-gray-500">Total ventas</th>
+          </tr>
+          </thead>
+          <tbody id="tabla-dia-body" class="divide-y divide-gray-50"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
+      <h3 class="font-semibold text-gray-800 mb-4">Ingresos por mes</h3>
+      <div id="sin-datos-periodo" class="hidden text-center py-8 text-gray-400 text-sm">
+        Sin datos de ventas por periodo aún.
+      </div>
+      <canvas id="graficaPeriodo" height="80"></canvas>
+      <div class="mt-6 overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 border-b border-gray-100">
+          <tr>
+            <th class="text-left px-4 py-2 font-medium text-gray-500">Mes</th>
+            <th class="text-center px-4 py-2 font-medium text-gray-500">Pedidos</th>
+            <th class="text-right px-4 py-2 font-medium text-gray-500">Total ventas</th>
+          </tr>
+          </thead>
+          <tbody id="tabla-periodo-body" class="divide-y divide-gray-50"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <h3 class="font-semibold text-gray-800 mb-4">Ventas por producto</h3>
+        <div id="sin-datos-productos" class="hidden text-center py-8 text-gray-400 text-sm">
+          Sin datos de ventas por producto aún.
+        </div>
+        <canvas id="graficaProductos" height="200"></canvas>
+        <div class="mt-6 overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50 border-b border-gray-100">
+            <tr>
+              <th class="text-left px-4 py-2 font-medium text-gray-500">#</th>
+              <th class="text-left px-4 py-2 font-medium text-gray-500">Producto</th>
+              <th class="text-left px-4 py-2 font-medium text-gray-500">Categoría</th>
+              <th class="text-center px-4 py-2 font-medium text-gray-500">Uds.</th>
+              <th class="text-right px-4 py-2 font-medium text-gray-500">Total</th>
+            </tr>
+            </thead>
+            <tbody id="tabla-productos-body" class="divide-y divide-gray-50"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <h3 class="font-semibold text-gray-800 mb-4">Ventas por categoría</h3>
+        <div id="sin-datos-categorias" class="hidden text-center py-8 text-gray-400 text-sm">
+          Sin datos de ventas por categoría aún.
+        </div>
+        <canvas id="graficaCategorias" height="200"></canvas>
+        <div class="mt-6 overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50 border-b border-gray-100">
+            <tr>
+              <th class="text-left px-4 py-2 font-medium text-gray-500">Categoría</th>
+              <th class="text-center px-4 py-2 font-medium text-gray-500">Uds.</th>
+              <th class="text-center px-4 py-2 font-medium text-gray-500">Pedidos</th>
+              <th class="text-right px-4 py-2 font-medium text-gray-500">Total</th>
+            </tr>
+            </thead>
+            <tbody id="tabla-categorias-body" class="divide-y divide-gray-50"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </main>
 
+<!-- Modal producto -->
 <div id="modal-producto"
      class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
   <div class="bg-white rounded-2xl w-full max-w-lg p-6 max-h-screen overflow-y-auto">
     <h2 class="font-bold text-xl mb-5" id="modal-titulo">Nuevo producto</h2>
-
     <div class="space-y-4">
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
@@ -101,7 +217,7 @@
       </div>
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
-        <select id="p-categoria"
+        <select id="p-categoria" onchange="actualizarTallas(this.value)"
                 class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black">
           <option value="1">Camisas</option>
           <option value="2">Pantalones</option>
@@ -126,18 +242,17 @@
                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black"/>
         </div>
       </div>
-
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">Tallas disponibles</label>
         <div class="flex flex-wrap gap-2" id="tallas-ropa">
-          <label class="talla-check"><input type="checkbox" value="XS"> <span>XS</span></label>
-          <label class="talla-check"><input type="checkbox" value="S">  <span>S</span></label>
-          <label class="talla-check"><input type="checkbox" value="M">  <span>M</span></label>
-          <label class="talla-check"><input type="checkbox" value="L">  <span>L</span></label>
-          <label class="talla-check"><input type="checkbox" value="XL"> <span>XL</span></label>
+          <label class="talla-check"><input type="checkbox" value="XS"><span>XS</span></label>
+          <label class="talla-check"><input type="checkbox" value="S"><span>S</span></label>
+          <label class="talla-check"><input type="checkbox" value="M"><span>M</span></label>
+          <label class="talla-check"><input type="checkbox" value="L"><span>L</span></label>
+          <label class="talla-check"><input type="checkbox" value="XL"><span>XL</span></label>
           <label class="talla-check"><input type="checkbox" value="XXL"><span>XXL</span></label>
         </div>
-        <div class="flex flex-wrap gap-2 mt-2" id="tallas-pantalon">
+        <div class="flex flex-wrap gap-2 hidden" id="tallas-pantalon">
           <label class="talla-check"><input type="checkbox" value="28"><span>28</span></label>
           <label class="talla-check"><input type="checkbox" value="30"><span>30</span></label>
           <label class="talla-check"><input type="checkbox" value="32"><span>32</span></label>
@@ -146,7 +261,6 @@
           <label class="talla-check"><input type="checkbox" value="38"><span>38</span></label>
         </div>
       </div>
-
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">URL de imagen</label>
         <input type="text" id="p-imagen" placeholder="https://..."
@@ -159,17 +273,23 @@
         </label>
       </div>
     </div>
-
-    <div id="error-modal" class="hidden bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 mt-4 text-sm"></div>
-
+    <div id="error-modal"
+         class="hidden bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 mt-4 text-sm"></div>
     <div class="flex gap-3 mt-6">
-      <button onclick="cerrarModalProducto()" class="flex-1 border border-gray-200 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">Cancelar</button>
-      <button onclick="guardarProducto()" id="btn-guardar" class="flex-1 bg-black text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors">Guardar</button>
+      <button onclick="cerrarModalProducto()"
+              class="flex-1 border border-gray-200 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
+        Cancelar
+      </button>
+      <button onclick="guardarProducto()" id="btn-guardar"
+              class="flex-1 bg-black text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors">
+        Guardar
+      </button>
     </div>
   </div>
 </div>
 
 <script src="../js/api.js"></script>
+<script src="../js/reportes.js"></script>
 <script src="../js/admin.js"></script>
 </body>
 </html>

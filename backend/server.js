@@ -14,6 +14,7 @@ app.use('/api/auth',      require('./routes/authRoutes'));
 app.use('/api/productos', require('./routes/productosRoutes'));
 app.use('/api/carrito',   require('./routes/carritoRoutes'));
 app.use('/api/pedidos',   require('./routes/pedidosRoutes'));
+app.use('/api/reportes', require('./routes/reportesRoutes'));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
