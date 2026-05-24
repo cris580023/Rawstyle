@@ -8,7 +8,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, '..', 'frontend')));
+const frontendPath = path.join(__dirname, '..', 'frontend');
+console.log('__dirname:', __dirname);
+console.log('Frontend path:', frontendPath);
+
+app.use(express.static(frontendPath));
 
 app.use('/api/auth',      require('./routes/authRoutes'));
 app.use('/api/productos', require('./routes/productosRoutes'));
@@ -17,7 +21,7 @@ app.use('/api/pedidos',   require('./routes/pedidosRoutes'));
 app.use('/api/reportes', require('./routes/reportesRoutes'));
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
+    res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
