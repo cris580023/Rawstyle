@@ -10,9 +10,6 @@ app.use(cors());
 app.use(express.json());
 
 const frontendPath = path.join(process.cwd(), 'frontend');
-console.log('process.cwd():', process.cwd());
-console.log('Frontend path:', frontendPath);
-console.log('Archivos en /app:', fs.readdirSync('/app'));
 
 app.use(express.static(frontendPath));
 
@@ -29,4 +26,11 @@ app.get('/', (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    console.log('process.cwd():', process.cwd());
+    console.log('Frontend path:', frontendPath);
+    try {
+        console.log('Archivos en /app:', fs.readdirSync('/app'));
+    } catch(e) {
+        console.log('Error leyendo /app:', e.message);
+    }
 });
