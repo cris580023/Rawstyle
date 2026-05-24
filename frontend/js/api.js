@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://rawstyle-production.up.railway.app/api';
 
 function getToken() {
     return localStorage.getItem('token');
