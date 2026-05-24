@@ -13,19 +13,19 @@ const frontendPath = path.join(process.cwd(), 'frontend');
 
 app.use(express.static(frontendPath));
 
-app.use('/api/auth',      require('./backend/routes/authRoutes'));
-app.use('/api/productos', require('./backend/routes/productosRoutes'));
-app.use('/api/carrito',   require('./backend/routes/carritoRoutes'));
-app.use('/api/pedidos',   require('./backend/routes/pedidosRoutes'));
-app.use('/api/reportes',  require('./backend/routes/reportesRoutes'));
+app.use('/api/auth',      require('./routes/authRoutes'));
+app.use('/api/productos', require('./routes/productosRoutes'));
+app.use('/api/carrito',   require('./routes/carritoRoutes'));
+app.use('/api/pedidos',   require('./routes/pedidosRoutes'));
+app.use('/api/reportes',  require('./routes/reportesRoutes'));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Servidor RawStyle corriendo en el puerto ${PORT}`);
     console.log('process.cwd():', process.cwd());
     console.log('Frontend path:', frontendPath);
     try {
