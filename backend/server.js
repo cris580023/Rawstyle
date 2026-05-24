@@ -8,8 +8,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const frontendPath = path.join(__dirname, '..', 'frontend');
-console.log('__dirname:', __dirname);
+const frontendPath = path.join(process.cwd(), 'frontend');
+console.log('process.cwd():', process.cwd());
 console.log('Frontend path:', frontendPath);
 
 app.use(express.static(frontendPath));
