@@ -13,11 +13,11 @@ const frontendPath = path.join(process.cwd(), 'frontend');
 
 app.use(express.static(frontendPath));
 
-app.use('/api/auth',      require('./routes/authRoutes'));
-app.use('/api/productos', require('./routes/productosRoutes'));
-app.use('/api/carrito',   require('./routes/carritoRoutes'));
-app.use('/api/pedidos',   require('./routes/pedidosRoutes'));
-app.use('/api/reportes', require('./routes/reportesRoutes'));
+app.use('/api/auth',      require('./backend/routes/authRoutes'));
+app.use('/api/productos', require('./backend/routes/productosRoutes'));
+app.use('/api/carrito',   require('./backend/routes/carritoRoutes'));
+app.use('/api/pedidos',   require('./backend/routes/pedidosRoutes'));
+app.use('/api/reportes',  require('./backend/routes/reportesRoutes'));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(frontendPath, 'index.html'));
