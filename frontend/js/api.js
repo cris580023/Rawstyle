@@ -1,4 +1,4 @@
-const API_URL = 'https://rawstyle-production.up.railway.app/api';
+const API_URL = 'https://natural-integrity-production-b302.up.railway.app/api';
 
 function getToken() {
     return localStorage.getItem('token');
